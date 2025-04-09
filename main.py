@@ -15,7 +15,6 @@ import torch.utils.data.distributed
 from models.Generate_Model import ClipModel, EfficientConformer, ClipModel2, ClipMode3, ClipModelWOGAP, EfficentLstm, EfficentBiLSTM, InceptionNetV1, InceptionNetV3
 from models.SwinTransformer import SwinFace
 from models.RestNetTCN import ResNet50TCN
-from models.Loss import SmoothLoss
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -616,7 +615,6 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='confusion matrix'
     plt.xlabel('Predicted label', fontsize=18)
     plt.tight_layout()
 
-#加载预训练模型进行测试，获取结果
 def computer_uar_war(val_loader, model, best_checkpoint_path, log_confusion_matrix_path, log_txt_path, data_set):
     
     pre_trained_dict = torch.load(best_checkpoint_path)['state_dict']

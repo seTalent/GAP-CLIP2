@@ -4,7 +4,6 @@ import torch
 
 # from models.Module.ResNet import __all__, resnet50, resnet18
 
-#DAiSEE数据集上将每个样本分割成 5个片段，每个片段60帧
 
 
 class EfficientnetLSTM(nn.Module):
@@ -20,7 +19,7 @@ class EfficientnetLSTM(nn.Module):
 
         self.drop_out = nn.Dropout(dropout)
         self.out_fc = nn.Sequential(nn.Linear(hidden_size, num_classes))
-        #softmax在使用CE的时候自动使用
+
 
     def forward(self, x):
         B, T, C, H, W = x.size()
@@ -29,7 +28,7 @@ class EfficientnetLSTM(nn.Module):
         x = self.base_model(x) #[B*T, 2560]
         x = x.view(B, T, -1)
         lstm_output, (h_n, c_n)= self.lstm(x)
-        x = h_n[-1] #取最后一个隐藏状态
+        x = h_n[-1]
         x = self.drop_out(x)
         x = self.out_fc(x) #[B, 4]
 

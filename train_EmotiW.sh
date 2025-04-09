@@ -19,7 +19,7 @@ CUDA_VISIBLE_DEVICES='0,1' python main.py \
 --text-type 'class_descriptor' \
 --seed 1 \
 --temporal-layers 1 \
---exper-name 'EmotiW补充实验' \
+--exper-name 'EmotiW' \
 --pretrain 'pretrain/ViT-B-32.pt' \
 --load_and_tune_prompt_learner True
 # --model  1 \

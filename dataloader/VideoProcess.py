@@ -1,4 +1,4 @@
-#读取一个视频，获取视频的帧
+
 import time
 from sys import stdout
 
@@ -18,7 +18,7 @@ import debugpy
 
     
 base_output_folder = "data/DFEW/frames"
-#修改成 "data/DAISEE/DataSet/Train"  or "Test" or "Validation"
+# "data/DAISEE/DataSet/Train"  or "Test" or "Validation"
 video_base_folder = "data/DFEW/videos"
 video_format = ".mp4"
 
@@ -85,7 +85,6 @@ val_anno = "/annotation/DAiSEE_val.txt"
 '''
 # 4599990171.avi
 # 459999021.avi
-#同一个数据集可能有多种形式的视频文件
 formats = ['.avi', '.mp4']
 
 txt_base = "data/DAiSEE/DataSet"
@@ -120,10 +119,10 @@ def process_DAISEE(set_csv, annotation_file, mode="all"):
         subfix = video_name[-4:]
         _mode = video2mode[video_name]['mode']
         _format = video2mode[video_name]['format']
-        # 构建视频文件路径
+
         video_path = f"data/DAiSEE/DataSet/{_mode}/{prefix}/{video_name}/{video_name}.{_format}"
 
-        #部分内容没有处理，特殊处理，用后注释
+
         _output_path = f"data/DAiSEE/{_mode}/{video_name}"
         if os.path.exists(_output_path):
             continue
@@ -132,18 +131,13 @@ def process_DAISEE(set_csv, annotation_file, mode="all"):
         command = [r"openface.bat", video_path, _mode]
         process = subprocess.run(command, text=True)
 
-        # 打印输出和错误
-        print("输出:", process.stdout)
-        print("错误:", process.stderr)
 # process_DAISEE(all_csv, None, 'all')
 # process_DAISEE(train_csv, None, 'Train')
 # process_DAISEE(test_csv, None, 'Test')
 # process_DAISEE(valid_csv, None, 'Validation')
 #
 
-'''
-1.重命名文件夹
-'''
+
 import os
 from tqdm import tqdm
 import shutil
@@ -162,12 +156,10 @@ import shutil
 
 
 
-'''
-2.重命名图片文件
-'''
+
 # for mode in modes:
 #     path = f"data/DAiSEE/{mode}"
-#     # 列出所有文件夹
+#
 #     folders = [f for f in os.listdir(path) if os.path.isdir(os.path.join(path, f))]
 #     for folder in tqdm(folders, total=len(folders), desc=mode):
 #         for img in os.listdir(os.path.join(path,folder)):
@@ -180,9 +172,7 @@ import shutil
 #                 # print(f'{os.path.join(path,folder,img)} {os.path.join(path,folder,new_name)}')
 
 
-'''
-3.1删除置信度为0的文件并且重新排序
-'''
+
 
 # modes = ['Train', 'Validation']
 # for mode in modes:
@@ -226,13 +216,11 @@ import shutil
 #         df['frame'] = df.index + 1
 #         df.to_csv(os.path.join(path, csv_file), index=False)
 
-'''
-3.2重命名图片文件，形如0001.bmp ...
-'''
+
 # img_format = '.bmp'
 # for mode in modes:
 #     path = f"data/EmotiW/{mode}"
-#     # 列出所有文件夹
+#
 #     folders = [f for f in os.listdir(path) if os.path.isdir(os.path.join(path, f))]
 #     for folder in tqdm(folders, total=len(folders), desc=mode):
 #         folder_path = os.path.join(path, folder)
@@ -244,12 +232,10 @@ import shutil
 #             old_path = os.path.join(folder_path, img)
 #             new_path = os.path.join(folder_path, new_name)
 #             os.rename(old_path, new_path)
-#             ##重命名为0001.bmp的形式
+#
 
 
-'''
-[option]4.将csv文件中的部分列取出来
-'''
+
 
 # features = [
 #     "gaze_0_x", "gaze_0_y", "gaze_0_z",
@@ -281,9 +267,6 @@ import shutil
 #         csv_file = 'selected_' + csv_file
 #         df.to_csv(os.path.join(path, csv_file), index=False)
 
-# '''
-# 5.构建annotation文件
-# '''
 
 DATASET = "EmotiW"
 modes = ['Train', 'Validation']
@@ -327,7 +310,7 @@ modes = ['Train', 'Validation']
 #         label = row['label']
 #         _mode = mode
 #         _format = '.mp4'
-#         if os.path.exists(os.path.join(base_path,f'{_mode}_csvs', video_name + '.csv')): #有的csv文件已经没有了
+#         if os.path.exists(os.path.join(base_path,f'{_mode}_csvs', video_name + '.csv')):
 #             data_csv = os.path.join(base_path,f'{_mode}_csvs', video_name + '.csv')
 #             df_data = pd.read_csv(data_csv)
 #             frame_cnt = len(df_data)
@@ -402,7 +385,7 @@ modes = ['Train', 'Validation']
 # base_line = EfficientNet.from_pretrained('efficientnet-b7')
 # base_line._fc = nn.Identity()
 # model = base_line.to('cuda')
-# # EfficientNet 预处理
+# # EfficientNet
 # transform = transforms.Compose([
 #     transforms.Resize(224),
 #     transforms.ToTensor(),
@@ -489,7 +472,7 @@ modes = ['Train', 'Validation']
 #                 cap.release()
 
 
-#Test里面的每一行重新命名了，同时将数据移动到对应的位置
+
 test_datas = []
 modes = ['Train', 'Validation', 'Test']
 for mode in modes:

@@ -12,37 +12,9 @@ import numpy as np
 import re
 from natsort import natsorted
  
-#EAR_l = (||y_37 - y_41|| + ||y_38 - y_40||) / 2 * ||x_36 - x_39||
-#EAR_r = (||y_43 - y_47|| + ||y_44 - y_46||) / 2 * ||x_42 - x_45||
-#EAR = (EAR_l + EAR_r) /2
-#pose_Tx,pose_Ty
-
-# features = [
-#     "y_37", 'y_41', 'y_38', 'y_40', 'x_36', 'x_39',
-#     'y_43', 'y_47', 'y_44', 'y_46', 'x_42', 'x_45',
-#     'pose_Tx', 'pose_Ty',
-#     "AU01_r", "AU02_r", "AU04_r",
-#     "AU05_r", "AU06_r", "AU07_r",
-#     "AU09_r", "AU10_r", "AU12_r",
-#     "AU14_r", "AU15_r", "AU17_r",
-#     "AU20_r", "AU23_r", "AU25_r",
-#     "AU26_r", "AU45_r", "AU01_c",
-#     "AU02_c", "AU04_c", "AU05_c",
-#     "AU06_c", "AU07_c", "AU09_c",
-#     "AU10_c", "AU12_c", "AU14_c",
-#     "AU15_c", "AU17_c", "AU20_c",
-#     "AU23_c", "AU25_c", "AU26_c",
-#     "AU28_c", "AU45_c",
-#     "gaze_0_x", "gaze_0_y", "gaze_0_z",
-#     "gaze_1_x", "gaze_1_y", "gaze_1_z"
-# ]
-# eye_features = [
-#     "y_37", 'y_41', 'y_38', 'y_40', 'x_36', 'x_39',
-# 'y_43', 'y_47', 'y_44', 'y_46', 'x_42', 'x_45',
-# ]
 
 
-'''EmotiW'''
+
 features = [
 "gaze_0_x", "gaze_0_y", "gaze_0_z",
 "gaze_1_x", "gaze_1_y", "gaze_1_z",
@@ -68,8 +40,6 @@ features = [
 target_features = [
 "gaze_0_x", "gaze_0_y", "gaze_0_z",
 "gaze_1_x", "gaze_1_y", "gaze_1_z",
-# "pose_Tx", "pose_Ty", "pose_Tz",
-# "pose_Rx", "pose_Ry", "pose_Rz",
 "gaze_angle_x", "gaze_angle_y",
 
 "AU01_r", "AU02_r", "AU04_r",
@@ -87,191 +57,6 @@ target_features = [
 "y_37", 'y_41', 'y_38', 'y_40', 'x_36', 'x_39',
 'y_43', 'y_47', 'y_44', 'y_46', 'x_42', 'x_45',
 ]
-
-# target_features = [
-# "gaze_0_x", "gaze_0_y", "gaze_0_z",
-# "gaze_1_x", "gaze_1_y", "gaze_1_z",
-# # "pose_Tx", "pose_Ty", "pose_Tz",
-# # "pose_Rx", "pose_Ry", "pose_Rz",
-# "gaze_angle_x", "gaze_angle_y",
-
-# "AU01_r", "AU02_r", "AU04_r",
-# "AU05_r", "AU06_r", "AU07_r",
-# "AU09_r", "AU10_r", "AU12_r",
-# "AU14_r", "AU15_r", "AU17_r",
-# "AU20_r", "AU23_r", "AU25_r",
-# "AU26_r", "AU45_r", "AU01_c",
-# "AU02_c", "AU04_c", "AU05_c",
-# "AU06_c", "AU07_c", "AU09_c",
-# "AU10_c", "AU12_c", "AU14_c",
-# "AU15_c", "AU17_c", "AU20_c",
-# "AU23_c", "AU25_c", "AU26_c",
-# "AU28_c", "AU45_c", 
-# "y_37", 'y_41', 'y_38', 'y_40', 'x_36', 'x_39',
-# 'y_43', 'y_47', 'y_44', 'y_46', 'x_42', 'x_45',
-# ]
-
-
-
-
-# target_features = [
-# # "gaze_0_x", "gaze_0_y", "gaze_0_z",
-# # "gaze_1_x", "gaze_1_y", "gaze_1_z",
-# # "pose_Tx", "pose_Ty", "pose_Tz",
-# # "pose_Rx", "pose_Ry", "pose_Rz",
-# "gaze_angle_x", "gaze_angle_y",
-
-# "AU01_r", "AU02_r", "AU04_r",
-# "AU05_r", "AU06_r", "AU07_r",
-# "AU09_r", "AU10_r", "AU12_r",
-# "AU14_r", "AU15_r", "AU17_r",
-# "AU20_r", "AU23_r", "AU25_r",
-# "AU26_r", "AU45_r", "AU01_c",
-# "AU02_c", "AU04_c", "AU05_c",
-# "AU06_c", "AU07_c", "AU09_c",
-# "AU10_c", "AU12_c", "AU14_c",
-# "AU15_c", "AU17_c", "AU20_c",
-# "AU23_c", "AU25_c", "AU26_c",
-# "AU28_c", "AU45_c", 
-# ]
-
-
-#1.针对pose的消融实验
-
-'''EmotiW'''
-
-
-
-#59.48
-# features = [
-
-# "gaze_0_x", "gaze_0_y", "gaze_0_z",
-# "gaze_1_x", "gaze_1_y", "gaze_1_z",
-# "gaze_angle_x", "gaze_angle_y",
-# "pose_Tx", "pose_Ty", "pose_Tz",
-# "pose_Rx", "pose_Ry", "pose_Rz",
-# "AU01_r", "AU02_r", "AU04_r",
-# "AU05_r", "AU06_r", "AU07_r",
-# "AU09_r", "AU10_r", "AU12_r",
-# "AU14_r", "AU15_r", "AU17_r",
-# "AU20_r", "AU23_r", "AU25_r",
-# "AU26_r", "AU45_r", "AU01_c",
-# "AU02_c", "AU04_c", "AU05_c",
-# "AU06_c", "AU07_c", "AU09_c",
-# "AU10_c", "AU12_c", "AU14_c",
-# "AU15_c", "AU17_c", "AU20_c",
-# "AU23_c", "AU25_c", "AU26_c",
-# "AU28_c", "AU45_c",
-
-# # ]
-#59.18
-# features = [
-# "gaze_angle_x", "gaze_angle_y",
-# "pose_Tx", "pose_Ty", "pose_Tz",
-# "pose_Rx", "pose_Ry", "pose_Rz",
-# "AU01_r", "AU02_r", "AU04_r",
-# "AU05_r", "AU06_r", "AU07_r",
-# "AU09_r", "AU10_r", "AU12_r",
-# "AU14_r", "AU15_r", "AU17_r",
-# "AU20_r", "AU23_r", "AU25_r",
-# "AU26_r", "AU45_r", "AU01_c",
-# "AU02_c", "AU04_c", "AU05_c",
-# "AU06_c", "AU07_c", "AU09_c",
-# "AU10_c", "AU12_c", "AU14_c",
-# "AU15_c", "AU17_c", "AU20_c",
-# "AU23_c", "AU25_c", "AU26_c",
-# "AU28_c", "AU45_c",
-# "gaze_0_x", "gaze_0_y", "gaze_0_z",
-# "gaze_1_x", "gaze_1_y", "gaze_1_z",
-# ]
-
-# 58.96
-# features = [
-
-# "AU01_r", "AU02_r", "AU04_r",
-# "AU05_r", "AU06_r", "AU07_r",
-# "AU09_r", "AU10_r", "AU12_r",
-# "AU14_r", "AU15_r", "AU17_r",
-# "AU20_r", "AU23_r", "AU25_r",
-# "AU26_r", "AU45_r", "AU01_c",
-# "AU02_c", "AU04_c", "AU05_c",
-# "AU06_c", "AU07_c", "AU09_c",
-# "AU10_c", "AU12_c", "AU14_c",
-# "AU15_c", "AU17_c", "AU20_c",
-# "AU23_c", "AU25_c", "AU26_c",
-# "AU28_c", "AU45_c",
-# "gaze_0_x", "gaze_0_y", "gaze_0_z",
-# "gaze_1_x", "gaze_1_y", "gaze_1_z",
-# "pose_Tx", "pose_Ty", "pose_Tz",
-# "pose_Rx", "pose_Ry", "pose_Rz",
-# "gaze_angle_x", "gaze_angle_y",
-
-# ]
-
-
-# features = [
-# "pose_Tx", "pose_Ty", "pose_Tz",
-# "pose_Rx", "pose_Ry", "pose_Rz",
-# "AU01_r", "AU02_r", "AU04_r",
-# "AU05_r", "AU06_r", "AU07_r",
-# "AU09_r", "AU10_r", "AU12_r",
-# "AU14_r", "AU15_r", "AU17_r",
-# "AU20_r", "AU23_r", "AU25_r",
-# "AU26_r", "AU45_r", "AU01_c",
-# "AU02_c", "AU04_c", "AU05_c",
-# "AU06_c", "AU07_c", "AU09_c",
-# "AU10_c", "AU12_c", "AU14_c",
-# "AU15_c", "AU17_c", "AU20_c",
-# "AU23_c", "AU25_c", "AU26_c",
-# "AU28_c", "AU45_c",
-# "gaze_0_x", "gaze_0_y", "gaze_0_z",
-# "gaze_1_x", "gaze_1_y", "gaze_1_z",
-
-# "gaze_angle_x", "gaze_angle_y",
-
-# ]
-
-# features = [
-# "pose_Tx", "pose_Ty", "pose_Tz",
-# "pose_Rx", "pose_Ry", "pose_Rz",
-# "AU01_r", "AU02_r", "AU04_r",
-# "AU05_r", "AU06_r", "AU07_r",
-# "AU09_r", "AU10_r", "AU12_r",
-# "AU14_r", "AU15_r", "AU17_r",
-# "AU20_r", "AU23_r", "AU25_r",
-# "AU26_r", "AU45_r", "AU01_c",
-# "AU02_c", "AU04_c", "AU05_c",
-# "AU06_c", "AU07_c", "AU09_c",
-# "AU10_c", "AU12_c", "AU14_c",
-# "AU15_c", "AU17_c", "AU20_c",
-# "AU23_c", "AU25_c", "AU26_c",
-# "AU28_c", "AU45_c",
-# "gaze_0_x", "gaze_0_y", "gaze_0_z",
-# "gaze_1_x", "gaze_1_y", "gaze_1_z",
-
-# "gaze_angle_x", "gaze_angle_y",
-# ]
-
-# features = [
-# "gaze_angle_x", "gaze_angle_y",
-# "pose_Tx", "pose_Ty", "pose_Tz",
-# "pose_Rx", "pose_Ry", "pose_Rz",
-# "AU01_r", "AU02_r", "AU04_r",
-# "AU05_r", "AU06_r", "AU07_r",
-# "AU09_r", "AU10_r", "AU12_r",
-# "AU14_r", "AU15_r", "AU17_r",
-# "AU20_r", "AU23_r", "AU25_r",
-# "AU26_r", "AU45_r", "AU01_c",
-# "AU02_c", "AU04_c", "AU05_c",
-# "AU06_c", "AU07_c", "AU09_c",
-# "AU10_c", "AU12_c", "AU14_c",
-# "AU15_c", "AU17_c", "AU20_c",
-# "AU23_c", "AU25_c", "AU26_c",
-# "AU28_c", "AU45_c",
-# "gaze_0_x", "gaze_0_y", "gaze_0_z",
-# "gaze_1_x", "gaze_1_y", "gaze_1_z",
-# ]
-
 
 
 class VideoRecord(object):

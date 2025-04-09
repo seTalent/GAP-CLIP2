@@ -279,7 +279,7 @@ def val_data_loader(list_file, num_segments, duration, image_size, args):
 
 
 #     if args.dataset == 'DAiSEE':
-#             #TODO:这里是否有必要进行？
+#
 #         train_transforms = torchvision.transforms.Compose([GroupResize(image_size),
 #                                                 Stack(),
 #                                                 ToTorchFormatTensor()])

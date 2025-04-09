@@ -6,7 +6,10 @@ from models.Temporal_Model import *
 from models.Prompt_Learner import *
 
 
-class ClipModel(nn.Module):
+
+
+
+class ClipModel0(nn.Module):
     def __init__(self, input_text, clip_model, args):
         super().__init__()
         self.args = args
@@ -56,6 +59,84 @@ class ClipModel(nn.Module):
         gap_features = gap_features @ attn_score.transpose(1, 2)  # [n, 512, 1]
         gap_features = gap_features.transpose(1, 2)  # [n, 1, 512]
         cross_features = torch.concat([gap_features, video_features], dim=-1)  # [B, 1, 2*C]
+
+        cross_video_features = self.cross_net(cross_features)  # [n, 1, 512]
+        cross_video_features = cross_video_features / cross_video_features.norm(dim=-1, keepdim=True)
+        cross_video_features = cross_video_features.squeeze(1)
+        # video_features = video_features / video_features.norm(dim=-1, keepdim=True)
+        ###############################################
+
+        ################## Text Part ##################
+        prompts = self.prompt_learner()
+        tokenized_prompts = self.tokenized_prompts
+        text_features = self.text_encoder(prompts, tokenized_prompts)
+        text_features = text_features / text_features.norm(dim=-1, keepdim=True)
+        ###############################################
+
+        output = cross_video_features @ text_features.t() / 0.1
+
+        return  output
+class ClipModel(nn.Module):
+    def __init__(self, input_text, clip_model, args):
+        super().__init__()
+        self.args = args
+        self.input_text = input_text  # 固定的文本提示 a smiling mouse ...
+        self.prompt_learner = PromptLearner(input_text, clip_model, args)
+        self.tokenized_prompts = self.prompt_learner.tokenized_prompts
+        self.text_encoder = TextEncoder(clip_model)
+        self.dtype = clip_model.dtype
+        self.image_encoder = clip_model.visual
+        self.temporal_net = Temporal_Transformer_Cls(num_patches=16,
+                                                     input_dim=512,
+                                                     depth=args.temporal_layers,
+                                                     heads=8,
+                                                     mlp_dim=1024,
+                                                     dim_head=64)
+
+        self.gap_net = GAP_Transformer(input_dim=56,
+                                       hidden_dim=256,
+                                       mlp_dim=512,
+                                       depth=args.temporal_layers,
+                                       heads=8,
+                                       dim_head=64,
+                                       t=args.t,
+                                       dropout=0., )
+
+        self.cross_net = nn.Sequential(nn.Linear(512 * 2, 512),
+                                       GELU(),
+                                       nn.Dropout(0.),
+                                       nn.Linear(512, 512),
+                                       nn.Dropout(0.))
+        self.clip_model_ = clip_model
+        self.cross_attn = CrossAttention()
+
+    def forward(self, image, gap):
+        ################# Visual Part And GAP Part #################
+        n, t, c, h, w = image.shape
+        image = image.contiguous().view(-1, c, h, w)  # [n*t, 3, 224, 224]
+        image_features = self.image_encoder(image.type(self.dtype))  # [n*t, 512]
+
+        image_features = image_features.contiguous().view(n, t, -1)  # [n, t, 512]
+        video_features = self.temporal_net(image_features)  # [n, 512] nan
+        gap_features = self.gap_net(gap.type(self.dtype))  # [n, t, 512]
+        gap_features = gap_features.transpose(1, 2)  # [n, 512, t]
+
+        query = video_features.unsqueeze(1)  # [n, 1, 512]
+
+        outputs = []
+        for i in range(gap_features.size(1)):
+            k = gap_features[:, i:i + 1, :]  # [n, 1, 512]
+            v = gap_features[:, i:i + 1, :]  # [n, 1, 512]
+            score = self.cross_attn(query, k.transpose(1, 2))  # [n, 1, 1]
+            weight = torch.softmax(score, dim=-1)  # [n, 1, 1]
+            output = torch.matmul(weight, v)  # [n, 1, 512]
+            outputs.append(output)
+
+        attn_outputs = torch.stack(outputs, dim=1)  # [n, t, 1, 512]
+        attn_outputs = attn_outputs.mean(dim=1)  # [n, 1, 512]
+
+        cross_features = torch.cat([attn_outputs, query], dim=-1)  # [n, 1, 1024]
+
 
         cross_video_features = self.cross_net(cross_features)  # [n, 1, 512]
         cross_video_features = cross_video_features / cross_video_features.norm(dim=-1, keepdim=True)
