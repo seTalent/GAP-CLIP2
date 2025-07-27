@@ -1,0 +1,2 @@
+# GAP-CLIP
+Code for GAP-CLIP for AAAI2026
