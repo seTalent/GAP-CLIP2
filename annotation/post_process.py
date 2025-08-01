@@ -1,6 +1,6 @@
 
-train_set = "annotation/DFEW_train_set1.txt"
-test_set = "annotation/DFEW_test_set1.txt"
+train_set = "annotation/DAiSEE_Train.txt"
+test_set = "annotation/DAiSEE_Test.txt"
 
 def post_process_annotation(file_path):
     new_lines = []
