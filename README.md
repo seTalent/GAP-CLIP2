@@ -1,53 +1,97 @@
-## GAP-CLIP: AreYouFocused?EmpoweredCLIPWithGAPFeaturesForStudentEngagementDetection
+<h2 align="center"><strong>Beyond General Features: Equipping CLIP with Engagement-specific Cues for Student Engagement Detection</strong></h2> <p align="center"> <b>If you find this project useful, please consider starring ⭐ the repo!</b> </p>
+## 🛠️ Project Log
 
-### Result
+* **[2025.08.01]** 📦📤 Initial codebase uploaded! 
 
-| **Method**             | **Input**           | **BackBone** | **DAiSEE** | **EngageNet** | **Avg**   |
-|------------------------|---------------------|--------------|------------|---------------| --------- |
-| C3D+TCN                | frames              | C3D          | 54.09      | 55.17         | 54.63     |
-| InceptionNet           | frames              | InceptionNet | 50.90      | 53.30         | 51.70     |
-| EfficientNetB7+LSTM    | frames              | EfficientNet | 52.58      | 56.44         | 54.51     |
-| EfficientNetB7+Bi-LSTM | frames              | EfficientNet | 54.73      | 56.54         | 55.64     |
-| Resnet+TCN             | frames              | Resnet       | _55.72_    | 57.03         | _56.38_   |
-| CLIP                   | frames              | CLIP         | 48.35      | 52.64         | 50.40     |
-| CMOSE                  | GAP features+audio  | I3D          | 47.70      | -             | -         |
-| TCCNET($aug$)          | GAP features        | Transformer  | 50.38      | **59.78**     | 55.08     |
-| Video-LLaVA(7B)        | frames              | 49.97        | 21.86      | 35.92         |
-| LLaVA-Next(34B)        | frames              |  45.10       | 16.13      | 30.62         |
-| **ours**               | frames+GAP features | CLIP         | **57.86**  | _59.63_       | **58.75** |
+## ✨ Highlights
 
-### Environment
+🔍 We propose **GAP-CLIP**, an engagement-aware CLIP-based model that leverages domain-specific cues: **Gaze, Action units, and Pose (G-A-P)**.
 
-``` python
+🧠 We introduce a global-aware frame fusion strategy to combine general and engagement-specific visual information.
+
+📚 A Textual Engagement Prior Encoder infuses semantic knowledge (e.g., "focused gaze implies engagement") to guide feature alignment.
+
+🏆 Our model outperforms all baselines on **DAiSEE** and **Emotiw23** benchmarks.
+
+## 📊 Main Results
+
+<p align="center"> <img src="assets/results.png" width="90%"> </p>
+
+## 📦 Installation
+
+```bash
+# Create environment
 conda create --name GAP-CLIP python=3.10
+conda activate GAP-CLIP
+
+# Install dependencies
 pip install -r requirements.txt
+
 ```
-### Run the train code
+
+## 🗂️ Dataset Preparation
+
+**1.Download datasets**: 
+
++ [DAiSEE](https://people.iith.ac.in/vineethnb/resources/daisee/index.html)       
++ [EngageNet](https://github.com/engagenet/engagenet_baselines)
+
+**2.Set up OpenFace** ([link](https://github.com/TadasBaltrusaitis/OpenFace)) for facial cue extraction. 
+
+**3.Run preprocessing:**
+
+```bash
+python dataloader/VideoProcess.py
+```
+
+After running, processed data will appear under the `data/` folder, and label files under `annotation/`.
+
+**4.Download CLIP checkpoint:**
+
++ Place the [CLIP-ViT-B-32](https://huggingface.co/sentence-transformers/clip-ViT-B-32) model in the `pretrain/` folder.
+
+## 🚀 Training
+
+```bash
+# Train on DAiSEE
+bash train_DAiSEE.sh
+
+# Train on EngageNet
+bash train_EmotiW.sh
+
+```
+
+results will be saved in ```log``` folder.
+
+## 🧪 Baselines
+
+We have reconstructed or obtained the following baselines for comparison:
+
+| Model                   | Code File                                         |
+| ----------------------- | ------------------------------------------------- |
+| EfficientNet-LSTM       | `models/GenerateModel.py`                         |
+| EfficientNet-BiLSTM     | `models/GenerateModel.py`                         |
+| InceptionNet            | `models/GenerateModel.py`                         |
+| ResNet+TCN              | `models/ResnetTCN.py`                             |
+| TCCNet (augmented)      | `TCCNet/`                                         |
+| Video-LLaVA, LLaVA-Next | `MLLMS/llava_video.py` + `finefune_videollava.py` |
+
+## 🧠 Method Overview
+
+<p align="center"> <img src="assets/overview.png" width="90%"> </p>
 
 
-+ download the dataset [DAiSEE](https://people.iith.ac.in/vineethnb/resources/daisee/index.html) and [EngageNet](https://github.com/engagenet/engagenet_baselines)
 
-  ```
-  mkdir data
-  mkdir pretrain
-  ```
-+ First, please set up [OpenFace](https://github.com/TadasBaltrusaitis/OpenFace) on your local machine(ours is Windows).
-+ use the *dataloader/VideoProcess.py* to process the datasets
+## 🔧 Environment Summary
 
-  After this, there will be label files in the annotation folder and data files in data folder.
+| Component | Version      |
+| --------- | ------------ |
+| Python    | 3.10         |
+| Platform  | Ubuntu 22.04 |
 
-+ download the ckpt of [clip-Vit-B-32](https://huggingface.co/sentence-transformers/clip-ViT-B-32) and place in the pretrain foloder
+## ⭐ Acknowledgements
+- [CLIP](https://github.com/openai/CLIP)
+- [OpenFace](https://github.com/TadasBaltrusaitis/OpenFace)
+- [DAiSEE](https://people.iith.ac.in/vineethnb/resources/daisee/index.html)
+- [EngageNet](https://github.com/engagenet/engagenet_baselines)
 
-+ use the *train_DAiSEE.sh* or *train_EmotiW.sh* to run the train code
-
-### Run baselines
-
-We have downloaded or reconstructed all baselines used in our paper
-
-**models.GenerateModel.py** : EfficientNet-LSTM, EfficientNet-BiLstm, InceptionNet
-
-**models.ResnetTCN**: ResNet+TCN
-
-**TCCNet**: We modified the TCCNet code to train the model use the train, valid and test sets instead of mixing the train and valida sets.
-
-**MLLMS/llava_video.py** and **MLLMs/finefune_videollava.py** : Based on Transformers library, we provide the test code fine-tune code for LLMs.
