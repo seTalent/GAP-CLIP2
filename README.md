@@ -1,4 +1,6 @@
 <h2 align="center"><strong>Beyond General Features: Equipping CLIP with Engagement-specific Cues for Student Engagement Detection</strong></h2> <p align="center"> <b>If you find this project useful, please consider starring ⭐ the repo!</b> </p>
+
+
 ## 🛠️ Project Log
 
 * **[2025.08.01]** 📦📤 Initial codebase uploaded! 
