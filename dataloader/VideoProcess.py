@@ -9,17 +9,12 @@ from tqdm import tqdm
 
 import subprocess
 import debugpy
-# try:
-#     debugpy.listen(('localhost', 12323))
-#     print('Waiting for debugger attach')
-#     debugpy.wait_for_client()
-# except Exception as e:
-#     print(e)
+
 
     
-base_output_folder = "data/DFEW/frames"
+base_output_folder = ""
 # "data/DAISEE/DataSet/Train"  or "Test" or "Validation"
-video_base_folder = "data/DFEW/videos"
+video_base_folder = ""
 video_format = ".mp4"
 
 '''
@@ -81,7 +76,7 @@ val_anno = "/annotation/DAiSEE_val.txt"
 
 
 '''
-0.处理原始数据集
+0.process origin videos
 '''
 # 4599990171.avi
 # 459999021.avi
@@ -396,9 +391,9 @@ modes = ['Train', 'Validation']
 # test_embeddings = []
 # valid_embeddings = []
 
-# train_embeddings = np.empty((0, 2560))  # 初始化为空的二维数组，形状 [0, 2560]
-# test_embeddings = np.empty((0, 2560))   # 同样初始化测试集嵌入
-# valid_embeddings = np.empty((0, 2560))  # 同样初始化验证集嵌入
+# train_embeddings = np.empty((0, 2560))  #  [0, 2560]
+# test_embeddings = np.empty((0, 2560))
+# valid_embeddings = np.empty((0, 2560))
 # for index, row in tqdm(df.iterrows(), total=len(df), desc=f"Processing All"):
 
 #     video_name = str(row['ClipID']).split('.')[0]
@@ -456,7 +451,7 @@ modes = ['Train', 'Validation']
 #         for f_file in os.listdir(os.path.join(data_path, file)):
 #             ff_file = os.path.join(data_path, file, f_file)
 #             for t_path in os.listdir(ff_file):
-#                 name, format = t_path.split('.') #名称 + 后缀
+#                 name, format = t_path.split('.')
 #                 cap = cv2.VideoCapture(os.path.join(ff_file, t_path))
 #                 frame_count = 0
 #                 _mode = v2m[name]['mode']
