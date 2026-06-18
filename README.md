@@ -17,7 +17,11 @@
 
 ## 📊 Main Results
 
-<p align="center"> <img src="assets/results.png" width="90%"> </p>
+<p align="center">
+  <img src="assets/main_result.png" width="100%" alt="Comparison of GAP-CLIP with baselines on DAiSEE and EmotiW23 using Accuracy and Macro-F1.">
+</p>
+
+We report both **Accuracy** and **Macro-F1** on **DAiSEE** and **EmotiW23**, together with the average performance across the two benchmarks.
 
 ## 📦 Installation
 
@@ -96,4 +100,3 @@ We have reconstructed or obtained the following baselines for comparison:
 - [OpenFace](https://github.com/TadasBaltrusaitis/OpenFace)
 - [DAiSEE](https://people.iith.ac.in/vineethnb/resources/daisee/index.html)
 - [EmotiW23](https://github.com/engagenet/engagenet_baselines)
-
